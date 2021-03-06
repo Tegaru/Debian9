@@ -1,4 +1,5 @@
-#konfigurasi vpn PPTPD
+# KONFIGURASI VPN PPTPD
+
 apt-get install pptpd
 nano /etc/pptpd.conf
 hilangkan tanda # di localip 10.10.10.1
