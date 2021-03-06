@@ -1,0 +1,57 @@
+#Konfigurasi mail server
+apt-get install postfix dovecot-imapd dovecot-pop3d
+nano /etc/postfix/mail.cf
+tambahkan di konfigurasi paling bawah
+home_mailbox = Maildir/
+dpkg-reconfigure postfix
+maildirmake.dovecot /etc/skel/Maildir
+nano /etc/dovecot/conf.d/10-auth.conf
+pada line 10 hilangkan tanda # di bagian disable_plaintext_auth = yes >>> ganti menjadi no
+nano /etc/dovecot/dovecot.conf
+Hilangkan tanda # di bagian listen =*,:: dan hapus di bagian ,::
+nano /etc/dovecot/conf.d/10-mail.conf
+Hilangkan tanda # di bagian mail_location = maildir:~/Maildir
+tambahkan tanda # di bagian mail_location = mbox:~/mail:INBOX=var/mail/%li
+/etc/init.d/postfix restart
+/etc/init.d/dovecot restart
+adduser mail1
+adduser mail2
+
+telnet mail.smkbisa.net 25 
+mail from:mail1@mail.smkbisa.net
+rcpt to:mail2@mail.smkbisa.net
+data
+Hello gan Selamat pagi
+.
+quit
+
+telnet mail.smkbisa.net 110
+user mail2
+pass bisa
+retr 1
+quit
+
+#Konfigurasi Web Mail Roundcube
+
+-nano /etc/roundcube/apache.conf
+tambahkan # di alias /roundcube
+-nano /etc/roundcube/config.inc.php
+cari dan edit 
+$config['default_host'] = 'mail.tegar.net';
+$config['smtp_server'] = 'localhost';
+-cd /etc/apache2/sites-available
+-cp 000-default.conf mail.conf
+- nano mail.conf
+-tambahkan 
+	NameServer mail.tegar.net
+	ServerAdmin@tegar
+	DocumentRoot /var/lib/roundcube
+-a2ensite mail.conf
+-/etc/init.d/apache2 restart
+-/etc/init.d/postfix restart
+-/etc/init.d/dovecot restart
+
+
+
+
+

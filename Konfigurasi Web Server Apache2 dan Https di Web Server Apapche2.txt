@@ -1,0 +1,88 @@
+#konfigurasi web server apache2
+apt-get install apache2
+mkdir /var/www/web
+touch /var/www/web/index.html
+nano /var/www/web/index.html
+
+<html>
+<h1>
+Selamat Datang Di web server smk wikrama
+<h2>
+</html>
+
+cd /etc/apache2/sites-available/
+cp 000-default.conf web.conf
+nano web.conf
+NameServer web.smkbisa.net
+NameAdmin Admin@wikrama
+DocumentRoot /var/www/web
+
+a2ensite web.conf
+/etc/init.d/apache2 restart
+
+
+#konfigurasi Https DI Web server apache2
+cp /cert/web.* /etc/ssl
+cd /etc/apache2/sites-available/
+cp default-ssl.conf webssl.conf
+
+NameServer web.smkbisa.net
+NameAdmin Admin@wikrama
+DocumentRoot /var/www/web
+
+SSLEngine ON
+SSLcertificateFile	/etc/ssl/web.crt
+SSLcertificateKeyFile	/etc/ssl/web.key
+
+scp root@192.168.10.1:/cert/web.* /etc/ssl 
+
+#konfigurasi virtual web page 
+
+cd /etc/apache2/sites-available/
+mkdir /home/tegar/public_html
+a2enmod userdir
+/etc/init.d/apache2 restart
+
+#konfigurasi web authentikasi
+
+tambahkan ke file web.conf dan web-ssl.conf
+<Directory /var/www/web>
+AuthType Basic
+AuthName "Masukan Username dan Password"
+AuthUserFile "/etc/apache2/htpasswd"
+Require valid-user
+</Directory>
+
+touch /etc/apache2/htpasswd
+htpasswd -b /etc/apache2/htpasswd tegar root
+/etc/init.d/apache2 restart
+
+
+#  Redirect HTTP to HTTPS
+a2enmod rewrite
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI}
+service apache2 restart
+
+
+
+
+
+
+
+#  konfigurasi phpmyadmin
+
+apt install apache php7.0 mariadb-server phpmyadmin
+mysql -u root -p mysql
+UPDATE user SET plugin="" WHERE user=’root’;
+flush privileges;
+exit
+
+nano /etc/phpmyadmin/config.inc.php
+Uncomment baris ini $cfg[‘Servers’][$i][‘AllowNoPassword’] = TRUE;
+
+mysql_secure_installation (Untuk mengganti password phpmyadmin)
+/etc/init.d/apache2 restart
+
+

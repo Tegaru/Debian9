@@ -1,0 +1,42 @@
+#Konfigurasi FTP SERVER
+apt-get install proftpd
+nano /etc/proftpd/proftpd.conf
+NameServer "ftp.smkbisa.net"
+Hilangkan tanda # di DocumentRoot 	~ atau di ganti dengan membuat directory /ftpuser yang kita buat
+mkdir /ftpuser
+chmod 777 /ftpuser
+adduser ftp
+
+mkdir /home/ftp/fileftp
+/etc/init.d/proftpd restart
+
+#FTP User Anonymous
+
+nano /etc/proftpd/proftpd.conf
+hilangkan tanda # di
+<anonymous ~ftp> ganti menjadi <anonymous /ftpuser ftp>
+user
+group
+RequireValidShell
+</anonymous>
+
+/etc/init.d/proftpd restart
+
+#Konfigurasi FTPS
+
+scp tegar@192.168.10.2:/cert/ftp.* /etc/ssl
+nano /etc/proftpd/proftpd.conf
+hilangkan tanda # di include /etc/proftpd/tls.conf
+masuk ke nano /etc/proftpd/tls.conf
+hilangkan tanda pagar di
+TLSEngine	on
+TLSLog		/var/log/proftpd/tls.log
+TLSProtocol	SSLv23
+TLSRSACertificateFile		/etc/ssl/ftp.crt
+TLSRSACertificateKeyFile	/etc/ssl/ftp.key
+TLSOption			NoCertRequest EnableDiags NoSessionReuseRequired
+TLSVerifyClient			off
+TLSRequired			on
+
+/etc/init.d/proftpd restart
+

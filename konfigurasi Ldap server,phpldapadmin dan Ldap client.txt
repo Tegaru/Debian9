@@ -1,0 +1,46 @@
+konfigurasi LDAP SERVER
+
+sebelum konfigurasi ldap server yang perlu di perhatikan paket mysql-server dan apache2 harus sudah terinstall 
+apt-get instal slapd ldap-utils
+apt-get install php7.0-xml
+
+nano /etc/ldap/ldap.conf
+BASE	dc=ldap,dc=smkbisa,dc=net 
+URL	ldap://ldap.smkbisa.net ldap://ldap.smkbisa.net:66
+
+dpkg-reconfigure slapd
+/etc/init.d/slapd restart
+ldapsearch -x
+apt-get install phpldapadmin
+nano /etc/phpldapadmin/config.php
+cari 
+$server->setvalue('server','host','192.168.70.2 Alamat Ip Server );
+$server->setvalue('server','base',array'('dc=ldap,dc=smkbisa,dc=net Alamat Domain Ldap server'));
+server->setvalue('login','bind_id','cn=admin,dc=ldap,dc=smkbisa,dc=net'
+
+/etc/init.d/apache2 restart
+
+
+masuk ke browser ketikan ldap.smkbisa.net/phpldapadmin
+-kemudian masukan password root (password yang sebelumnya telah kita buat)
+-pada bagian dc=ldap,dc=smkbisa,dc=net klik tanda +
+-kemudian pilih create new entry here
+
+konfigurasi LDAP Client
+
+apt-get install libnss-ldap libpam-ldap ldap-utils
+nano /etc/pam.d/common-password
+hapus use_authtok pada line 26
+session-optional pam_mkhomedir.so sket=/etc/skel umask=077 
+nano /etc/pam.d/common-session
+tambahkan ldap di
+passwd:	compat ldap
+group:	compat ldap
+shadow:	compat ilda
+gshadow: files ldap
+nano /etc/nsswitch.conf
+/etc/init.d/nscd restart
+reboot
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Semangat45;';
+SET PASSWORD FOR 'root'@'localhost'= PASSWORD('root');

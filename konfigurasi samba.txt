@@ -1,0 +1,33 @@
+mkdir /file/manager
+groupadd usermanager
+
+#membuat group user 
+#!/bin/bash
+
+for i in {6..10}
+do
+usermod user$i-G usermanager
+echo -e "lksjateng\nlksjateng" | smbpasswd -a -s user$i
+done
+
+chmod +x usersamba.sh
+./usersamba.sh
+
+chown –R root.usermanager /files/manager
+chmod 774 -R /file/manager
+
+nano /etc/samba/smb.conf
+[manager]
+	comment = hanya bisa akses user6-10
+	browseable = yes
+	path = /file/manager
+	writeable = yes
+	read only = no
+	security = user
+	valid users =@usermanager (merupankan group)
+	veto files = *.txt (di gunakan untuk memblok file dengan format txt)
+
+
+/etc/init.d/smb restart
+
+konfigurasi samba menggunakan adduser yang nantinya mengakses directory usernya

@@ -1,0 +1,25 @@
+openssl genrsa -des3 -out rootCA.key 2048
+openssl req -x509 -new -nodes -sha256 -key rootCA.key -out rootCA.pem -days 1024
+openssl req -new -nodes -sha256  -out site.csr -newkey rsa:2048 -keyout site.key
+nano v3.ext
+authorityKeyIdentifier=keyid, issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_name
+
+[alt_name]
+DNS.1 = jepara.net
+DNS.2 = www.jepara.net
+
+
+
+openssl x509 -req  -in site.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out site.crt -sha256 -days 365 -extfile v3.ext
+
+openssl verify -CAfile rootCA.pem site.crt
+
+
+# note Pastikan settingan waktun,tanggal,bulan,tahunya sudah benar
+date --set 2019-8-29
+date --11:00:00
+time zone   dpkg-reconfigure tzdate
+

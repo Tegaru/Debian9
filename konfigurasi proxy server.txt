@@ -1,0 +1,42 @@
+konfigurasi proxy server
+apt-get install squid3 
+nano /etC/squid/squid.conf
+http_port 3128
+visible_hostname smkbisa.net
+cache_mgr admin@smkwikrama.net
+cache_dir ufs /var
+cache_mem 256
+tambahkan tanda # di http_access deny all
+ctl+x cari acl connect
+acl local src 192.168.10.0/24
+acl blokir dstdomain "/etc/squid/domain"
+acl blokkey url_regex -i "/etc/squid/key"
+acl download urlpath_regex "/.mp3$/.mp4$/.mkv$"
+http_access deny blokir
+http_access deny blokkey
+http_access deny download
+http_access allow local
+http_access allow all
+
+/etc/init.d/squid restart
+nano /etc/squid/domain
+detik.com
+info.smkbisa.net
+nano /etc/squid/key
+bola
+presiden
+mikrotik
+hacking
+
+/etc/init.d/squid restart
+squid -z
+
+
+iptables -t nat -A PREROUTING -p tcp –dport 80 -j REDIRECT –to-port 3128
+
+
+settingan di mikrotik
+
+
+ip proxy set enable=yes port=8080 parent-proxy=202.191.1.2 parent-proxy-port=3128
+ip firewall nat add chain=dstnat protocol=tcp src-address=10.168.1.0/25 dst-port=80 action=redirect to-ports=8080

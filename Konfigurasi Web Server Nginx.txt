@@ -1,0 +1,40 @@
+Konfigurasi Web Server Nginx
+
+
+mkdir /var/www/web
+touch /var/www/web/index.html
+nano /var/www/web/index.html
+
+
+cd /etc/nginx/sites-enabled/
+touch www
+nano www
+
+server {
+       listen 80;
+
+       server_name smkbisa.net;
+
+       root /var/www/html;
+       index index.html;
+
+	rewrite ^ https://$server_name$request_uri? permanent; (redirect http ke https)
+}
+
+server {
+       listen 443;
+
+       server_name smkbisa.net;
+
+       root /var/www/html;
+       index index.html;
+	
+	ssl on;
+	ssl_certificate /etc/ssl/ww.crt;
+	ssl_certificate_key /etc/ssl/www.key;
+}
+
+
+
+ln -s /etc/nginx/sites-available/.www
+/etc/init.d/nginx restart

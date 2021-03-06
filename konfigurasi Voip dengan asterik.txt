@@ -1,0 +1,39 @@
+apt-get install asterisk
+nano /etc/asterisk/sip.conf
+
+tambahkan di bagian paling bawah
+[general]
+port = 5060
+bindaddr = 0.0.0.0
+context = onther
+
+[820001]
+type=friend
+context=myphone
+username=820001
+secret=smkbisa
+host=dynamic
+vidiosupport=yes
+
+
+[820002]
+type=friend
+context=myphone
+username=820002
+secret=smkbisa
+host=dynamic
+vidiosupport=yes
+
+nano extentions.conf
+
+[japara]
+exten =>820001,1,Dial(SIP/820001)
+exten =>820002,1,Dial(SIP/820002)
+
+/etc/init.d/asterisk restart
+
+
+Untuk Pengujiannya kita bisa menggunakan aplikasi
+Zoiper
+
+

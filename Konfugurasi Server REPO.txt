@@ -1,0 +1,40 @@
+Konfugurasi Server REPO
+apt-get install apache2 rsync dpkg-dev
+mkdir /repo
+mkdir /media/dvd1
+mkdir /media/dvd2
+mkdir /media/dvd3
+mkdir -p /repo/pool/
+mkdir -p /repo/dists/stretch/main/binary-amd64/
+mkdir -p /repo/dists/stretch/main/source
+mount -o loop debian-9.6.0-amd64-DVD-1.iso /media/dvd1
+mount -o loop debian-9.6.0-amd64-DVD-2.iso /media/dvd2
+mount -o loop debian-9.6.0-amd64-DVD-3.iso /media/dvd3
+cd /media/dvd1
+rsync -avH pool/ /repo/pool
+cd /media/dvd2
+rsync -avH pool/ /repo/pool
+cd /media/dvd3
+rsync -avH pool/ /repo/pool
+
+cd /repo
+dpkg-scanpackages . /dev/null |gzip -9c > Packages.gz
+dpkg-scansources . /dev/null | gzip -9c > Sources.gz
+mv Packages.gz dists/stretch/main/binary-amd64/
+mv Sources.gz dists/stretch/main/source
+ln -s /repo/ /var/www/html/debian
+deb http://zonerepo.net/debian stretch main
+deb-src http://zonerepo.net/debian stretch main
+
+.kompas.com
+
+
+
+konfigurasi repository online debian
+deb http://kartolo.sby.datautama.net.id/debian stretch main contrib non-free
+deb http://kartolo.sby.datautama.net.id/debian stretch-updates main contrib non-free
+deb http://kartolo.sby.datautama.net.id/debian-security/ stretch/updates main contrib non-free
+deb http:ftp.de.debian.org/debian stretch-backports main
+
+
+

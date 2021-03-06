@@ -1,0 +1,81 @@
+#Reverse Proxy Nginx
+
+nano /etc/nginx/sites-enabled/
+nano modul
+
+
+server {
+	listen 80;
+	ServerName data.smkbisa.net;
+	location / {
+		proxy_pass http://info.smkbisa.net;
+	}
+}
+server {
+	listen 443;
+	ServerName modul.smkbisa.net;
+	ssl on;
+	ssl_certifcate	/etc/ssl/modul.crt
+	ssl_certificatekey	/etc/ssl/modul.key
+	location / {
+	}
+	proxy_pass https://info.smkbisa.net;(note jika port 80 dan 443 di rubah maka kita perlu menambahkan portnya semisal https://uji.coba.net:(ini bisa di isikan port yang sudah kita rubah tadi)
+}
+
+ln -s /etc/nginix/sites-available/.modul
+/etc/init.d/nginx restart
+
+
+
+atau
+
+
+
+cd /etc/nginx/sites-enabled/
+touch dev
+nano dev
+
+server {
+
+	listen 80;
+	server_name dev.juaralks.net;
+	location /{
+	proxy_pass http://lks.juaralks.net:81;
+	}
+}
+
+server {
+	listen 443 ssl;
+	server_name dev.juaralks.net;
+
+	ssl on;
+	ssl_certifitace		/etc/ssl/certs/ssl-cert-snakeoil.pem;
+	ssl_certificate_key	/etc/ssl/private/ssl-cert-snakeoil.key;
+	location /{
+	proxy-pass https://lks.juaralks.net:444;
+	}
+}
+
+ln -s /etc/nginx/sites-available/.dev
+
+/etc/init.d/nginx restart
+
+server {
+        listen 443 ssl;
+        server_name www.kebumen.net;
+
+        ssl on;
+        ssl_certificate /etc/ssl/www.crt;
+        ssl_certificate_key /etc/ssl/www.key;
+
+        location /{
+        proxy_pass http://info.kebumen.net;
+        }
+}
+server {
+    listen 81;
+    server_name www.kebumen.net;
+ rewrite ^ https://$server_name$request_uri? permanent;
+
+}
+

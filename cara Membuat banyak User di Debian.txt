@@ -1,0 +1,62 @@
+cara Membuat banyak User di Debian
+
+Membuat User beserta directorynya
+
+mkdir list1.sh
+nano list1.sh
+chmod +x list.sh
+
+for i in {1..25}
+do
+adduser user$i --disabled-password --gecos user$i
+passwd user$i <<< "bisa"$'\n'"bisa"
+done
+
+chmod 777 ./list1
+./list1
+
+membuat user yang tidak menggunakan directory
+
+mkdir list2.sh
+nano list2.sh
+
+
+for i in {1..25}
+do
+useradd user$i
+echo -e "bisa\nbisa" | passwd user$i
+done
+
+chmod +x ./list2
+./list2
+
+#  buar user web authenfikasi 
+buat dulu 
+touch /etc/apache2/.htpasswd
+
+nano web.sh
+
+#!/bin/bash
+for i in {11..20};
+do
+htpasswd –b /etc/apache2/.htpasswd user$i InaSkills2017
+done
+
+chmod +x web.sh
+./web.sh
+
+#  Membuat Uer buat Mail server 
+nano usermail.sh
+
+#!/bin/bash
+for i in {11..20};
+do
+mkdir /home/user$i
+maildirmake.dovecot /home/user$i/Maildir
+chown –R user$i:user$i /home/user$i
+chmod –R 775 /home/user$i
+usermod user$i –d /home/user$i
+done
+
+chmod +x usermail.sh
+./usermail.sh

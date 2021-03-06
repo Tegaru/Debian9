@@ -1,0 +1,88 @@
+konfigurasi openvpn
+
+apt-get install openvpn easy-rsa
+cp /usr/share/doc/openvpn/examples/sample-config-file/server.conf.gz /etc/openvpn/
+cd /usr/share/easy-rsa
+nano vars
+#key_Country = ID
+#key_Province = Jawa Tengah
+#key_City = Jepara
+#key_Org = SMK NET
+#key_Email = wikrama@gmail.com
+
+source vars
+cp openssl-1.0.0.cnf openssl.cnf
+./clean-all
+./build-ca
+./build-key-server server
+./pkitool --initca
+./pkitool --server server
+./pkitool client
+./build-dh 2048
+
+cp keys/server.key /etc/openvpn/
+cp keys/server.crt /etc/openvpn/
+cp keys/ca.crt /etc/openvpn/
+cp keys/dh2048.pem /etc/openvpn/
+
+ATAU
+cp keys/{ca.crt,server.crt,server.key,dh2048.pem} /etc/openvpn
+cd .. masuk ke /etc/openvpn
+
+useradd -m -s /bin/false uservpn
+passwd uservpn
+chmod -R 755 /home/uservpn/
+cp /usr/share/doc/easy-rsa/examples/sample-config-files/client.conf /etc/openvpn/client.ovpn
+cp keys/{ca.crt,client.crt,client.key} /home/uservpn
+ 
+
+gunzip server.conf.gz
+nano server.conf
+
+server 100.100.100.0 255.255.255.0 >> cari dengan kata kunci 10.8
+Push “route 192.168.10.0 255.255.255.0” >> cari dengan kata kunci
+192.168.10.0 (isikan dengan network
+yang dimiliki local client)
+push "redirect-gateway def1 bypass-dhcp"
+push "dhcp-option DNS 192.168.10.1"
+client-to-client
+
+chmod 777 /etc/openvpn
+
+systemctl daemon-reload
+service openvpn restart
+systemctl enable openvpn@server
+systemctl start openvpn@server
+
+# Konfigurasi openvpn client Linux
+apt-get install network-manager-openvpn-gnome
+
+#Konfigurasi di Client Windows
+
+copy kan certificate ca.crt,client.crt,client.key ke C:\Users\WINCTL-1\OpenVPN\config\client
+
+# Tambahkan printah ini di client.ovpn
+
+remote 200.100.1.2 1194
+;tls-auth ta.key 1
+auth-nocache
+auth-user-pass
+
+
+
+#konfigurasi vpn PPTPD
+apt-get install pptpd
+nano /etc/pptpd.conf
+hilangkan tanda # di localip 10.10.10.1
+hilangkan tanda # di remoteip 10.10.10.5-10,10.10.10.20
+nano /etc/ppp/pptpd-options
+hilangkan tanda # di ms-dns 8.8.8.8 dan ubah menjadi dns server
+nano /etc/ppp/chap-secrets
+tambahkan nama user,server,secret,ip address
+/etc/init.d/pptpd restart
+
+
+
+
+
+

@@ -1,0 +1,25 @@
+konfigurasi Cacti
+apt-get install cacti
+apt-get install snmp snmpd
+
+cara membuat virtualhost cacti
+cd /etc/apache2/sites-available/
+cp 00-default.conf cacti.conf
+nano cacti.conf
+servername cacti.smkbisa.net
+serveadmin admin@smkbisa
+documentroot /usr/share/cacti/site
+
+#setting snmp mikrotik
+snmp set enable = yes
+snmp comunity add name=local read_access=yes addresses=192.168.70.2 (alamat server monitoring)
+snmp set trap_comunity =local
+snmp set contact=smkbisa.net location=jawa_tengah
+
+
+#Setting snmp di Router Debian (atau perangkat yang akan di monitoring)
+apt-get install snmp snmpd
+nano /etc/snmp/snmpd.conf
+agentAddress udp:127.0.0.1:161 ganti alam ip menjadi ip debiannya
+dibagian ACCESS CONTROL tambahkan 
+rocommunity lks 172.23.199.4 (ini merupakan alamat server monitoring) jadi yang bisa mengakses snmp router debian adalah pemilik ip tersebut.

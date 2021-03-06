@@ -1,0 +1,29 @@
+#  Konfigurasi FreeRadius
+ 
+apt-get install freeradius
+nano /etc/freeradius/client.conf
+
+client Mikrotik {
+	ipaddr = 192.168.70.1 (ip client freeradius)
+	secret = smkbisa
+}
+
+
+
+nano freeradius.sh
+#!/bin/bash
+for i in {1..25}
+do
+echo "user$i	Cleartext-Password	:= "smkbisa" >> /etc/freeradius/users
+done
+chmod +x freeradius.sh
+./freeradius.sh
+
+nano /etc/freeradius/users
+tail -f /var/log/freeradius/radius.log
+
+
+#  konfigurasi freeradius di mikrotik
+radius add address=192.168.70.2 secret=smkbisa
+user aaa set use-radius=yes default-group=read
+

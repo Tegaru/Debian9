@@ -1,0 +1,19 @@
+apt-get install openssh-server
+nano /etc/ssh/sshd_config
+aktifkan port 22 dengan cara menghilangkan tanda #
+aktifkan juga PermitRootLogin caranya sama dengan cara menghilangakan tanda # dan kemudian ubah authfication-password mendaji yes
+/etc/init.d/ssh restart
+
+
+konfigurasi user setara dengan user root
+apt-get install sudo
+nano /etc/sudoers
+tambahkan Zidan ALL={ALL:ALL} ALL
+
+konfigurasi ssh key pair
+ssh-keygen -t rsa
+ssh-copy-id zidan@192.168.10.1
+ssh zidane@192.168.10.1
+
+scp tegar@20.20.20.2:/cert /etc/ssl
+scp -P 23 tegar@20.20.20.2:cert /etc/ssl

@@ -1,0 +1,25 @@
+Langkah-Langkah konfigurasi Print-server
+-apt-get install cups
+-nano /etc/cups/cupsd.conf
+Pada baris teratas, tambahkan baris berikut :
+ServerAlias *
+Listen 631
+
+Cari Tag <Location> lalu Uncomment dan Sesuaikan agar menjadi seperti berikut
+<Location />
+                #Order allow,deny
+                Allow from all
+</Location>
+
+<Location /admin>
+                #Order allow,deny
+                Allow from all
+</Location>
+
+<Location /admin/conf>
+                #AuthType Default
+                #Require user @SYSTEM
+                #Order allow,deny
+                Allow from all
+</Location>
+systemctl restart cups	

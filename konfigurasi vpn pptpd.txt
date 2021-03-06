@@ -1,0 +1,10 @@
+#konfigurasi vpn PPTPD
+apt-get install pptpd
+nano /etc/pptpd.conf
+hilangkan tanda # di localip 10.10.10.1
+hilangkan tanda # di remoteip 10.10.10.5-10,10.10.10.20
+nano /etc/ppp/pptpd-options
+hilangkan tanda # di ms-dns 8.8.8.8 dan ubah menjadi dns server
+nano /etc/ppp/chap-secrets
+tambahkan nama user,server,secret,ip address
+/etc/init.d/pptpd restart

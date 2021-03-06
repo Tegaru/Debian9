@@ -1,0 +1,49 @@
+mkdir /repo
+mkdir dvd1
+mkdir dvd2
+mkdir dvd3
+mount /dev/cdrom dvd1
+ls dvd1
+cp -rfv dvd1 /repo
+cd /repo
+ls 
+eject
+(masukan dvd2)
+mount /dev/cdrom dvd2
+ls dvd1
+cp -rfv dvd2 /repo
+cd /repo
+ls
+eject
+masukan dvd3
+mount /dev/cdrom dvd3
+ls dvd1
+cp -rfv dvd3 /repo
+cd /repo
+ls
+eject
+
+nano/etc/apt/source.list
+deb file:/repo/dvd1 stretch contrib main
+deb file:/repo/dvd2 stretch contrib main
+deb file:/repo/dvd3 stretch contrib main
+
+apt-get update
+apt-get install apache2
+
+
+ln -s /repo /var/www/repo
+cd /etc/apache2/sites-available/
+nano 000-default.conf
+#ganti menjadi
+DocumentRoot /var/www/repo
+/etc/init.d/apache2 restart
+
+
+# konfigurasi di server yang join repository local
+nano /etc/apt/source.list
+deb http:/200.100.1.2/dvd1 stretch contrib main     #note 200.100.1.2 merupakan ip dari server repo local
+deb http:/200.100.1.2/dvd2 stretch contrib main
+deb http:/200.100.1.2/dvd3 stretch contrib main
+
+apt-get update

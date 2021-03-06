@@ -1,0 +1,34 @@
+
+Reverse Proxy Di menggunakan Apache2
+apt-get install apache2 libapache2-mod-proxy-html
+#cd /etc/apache2/
+#nano apache2.conf
+
+<Proxy *>
+     Order deny,allow
+     Allow from all
+</Proxy>
+
+cd /etc/apache2/sites-enabled/
+cp 000-default.conf reverse.conf
+
+
+<VirtualHost reverse.zonatkj.net.test:80>
+  ServerName reverse.zonatkj.net.test
+  ProxyPass     /    http://zonatkj.net.test/
+  ProxyPassReverse    /    http://zonatkj.net.test/  
+</VirtualHost>
+
+#a2enmod proxy proxy_http
+#service apache2 restart
+
+
+Reverse Proxy Menggunkan Nginx
+apt-get install nginx
+
+nano /etc/nginx/sites-enabled/default
+di line 37 (location / { ) tambahkan di bawahnya
+proxy_pass http://info.smkbisa.net:80; (Alamat Web Server yang di tuju)
+include /etc/nginx/proxy_params;
+
+/etc/init.d/nginx restart

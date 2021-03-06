@@ -1,0 +1,14 @@
+#Konfigurasi DNS Server
+
+#Konfigurasi DDNS (Dynamic DNS)
+
+
+#Konfigurasi Split DNS
+
+
+#Konfigurasi DNS SLAVE
+
+
+
+
+

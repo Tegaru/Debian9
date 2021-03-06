@@ -1,0 +1,9 @@
+Konfigurasi Certificate CA
+
+apt-get install openssl ssl-cert
+mkdir /cert
+cd /cert
+openssl req -x509 -new -nodes -out rootcrt.crt -keyout rootkey.key
+openssl req -new -nodes -days 365 -out web.csr -keyout web.key
+openssl x509 -req -CA rootcrt.crt -CAkey rootkey.key -set_serial 01 -in web.csr -out web.crt
+

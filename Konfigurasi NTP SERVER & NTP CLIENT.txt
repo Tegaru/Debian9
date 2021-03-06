@@ -1,0 +1,24 @@
+# Konfigurasi NTP SERVER
+apt-get install ntp
+nano /etc/ntp.conf
+tambahkan tanda # di
+pool 0.debian.pool.ntp.org iburst
+pool 1.debian.pool.ntp.org iburst
+pool 2.debian.pool.ntp.org iburst
+pool 3.debian.pool.ntp.org iburst
+
+server 127.127.1.0
+fudge 127.127.1.0 startum 1
+
+kemudian hilangkan tanda 3 di
+restrict 192.168.70.0 netmask 255.255.255.0 nomodify notrap
+
+/etc/init.d/ntp restart
+ntpq -pn
+
+
+
+konfigurasi NTP Di Client
+date
+apt-get install ntpdate
+ntpdate -u 192.168.70.2
